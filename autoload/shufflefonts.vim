@@ -1,11 +1,5 @@
 " Autoload portion of plugin/shufflefonts.vim.
 
-" dependent on fontsize.vim"
-
-if !exists("autoloaded_fontsize")
-    finish
-endif
-
 if exists("autoloaded_shufflefonts")
     finish
 endif
@@ -68,8 +62,10 @@ function! shufflefonts#quit()
     echo fontsize#fontString(getfontname()) . " (Done)"
 endfunction
 
-augroup shufflefonts
-    au BufEnter * :call shufflefonts#shuffle()
-augroup END
+function! shufflefonts#init()
+    augroup shufflefonts
+        au BufEnter * :call shufflefonts#shuffle()
+    augroup END
+endfunction
 
 " vim: sts=4 sw=4 tw=80 et ai:
