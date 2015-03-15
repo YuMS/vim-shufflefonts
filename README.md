@@ -24,6 +24,7 @@ Append
 ```
 in your `.vimrc`.
 
+Execute
 ```
     $vim +BundleInstall
 ```
@@ -33,16 +34,16 @@ and it should work.
 ## Customization
 
  * A font playlist is required. Illustrated below:
-    ```
-        let g:shufflefonts_fonts_list = [
-            \'Inconsolata',
-            \'Consolas',
-        \]
-    ```
+```
+    let g:shufflefonts_fonts_list = [
+        \'Inconsolata',
+        \'Consolas',
+    \]
+```
  * Auto changing can be disabled by:
-    ```
-        let g:shufflefonts_on_switch = 0
-    ```
+```
+    let g:shufflefonts_on_switch = 0
+```
 
 ## Fonts
 
