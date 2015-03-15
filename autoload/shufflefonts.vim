@@ -6,26 +6,7 @@ endif
 let autoloaded_shufflefonts = 1
 
 let s:updatetime = &updatetime
-let s:fontsList = [
-    \'Source_Code_Pro',
-    \'Consolas',
-    \'Share_Tech_Mono',
-    \'PT_Mono',
-    \'ProFontWindows',
-    \'NovaMono',
-    \'Lucida_Console',
-    \'InputMono',
-    \'Inconsolata',
-    \'Fira_Mono',
-    \'Droid_Sans_Mono',
-    \'Cutive_Mono',
-    \'Cousine',
-    \'Courier_New',
-    \'Courier',
-    \'BitStream_Vera_Sans_Mono',
-    \'Arial_monospaced_for_SAP',
-    \'Anonymous_Pro'
-\]
+let s:fontsList = []
 
 let s:rnd = localtime() % 0x10000
 
@@ -41,6 +22,9 @@ function! shufflefonts#echofont()
 endfunction
 
 function! shufflefonts#shuffle()
+    if !len(s:fontsList)
+        return
+    endif
     let fontSize = fontsize#getSize(getfontname())
     let index = s:random(len(s:fontsList))
     let &guifont = fontsize#setSize(s:fontsList[index], fontSize)
@@ -63,6 +47,9 @@ function! shufflefonts#quit()
 endfunction
 
 function! shufflefonts#init()
+    if exists('g:shufflefonts_fonts_list')
+        let s:fontsList = g:shufflefonts_fonts_list
+    endif
     augroup shufflefonts
         au BufEnter * :call shufflefonts#shuffle()
     augroup END
