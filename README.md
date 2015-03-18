@@ -22,34 +22,42 @@ Append
     Bundle 'drmikehenry/vim-fontsize'
     Bundle 'YuMS/vim-shufflefonts'
 ```
+
 in your `.vimrc`.
 
 Execute
+
 ```
     $vim +BundleInstall
 ```
-and it should work.
 
+and it should work.
 
 ## Customization - **IMPORTANT**
 
 ### Playlist
 
 A font playlist is **required**, or this plugin won’t do anything. 5 configuration values are bound with it:
+
  * `g:shufflefonts_fonts_list`
  * `g:shufflefonts_fonts_list_all`
  * `g:shufflefonts_fonts_list_windows`
  * `g:shufflefonts_fonts_list_mac`
  * `g:shufflefonts_fonts_list_linux`
+
 When `g:shufflefonts_fonts_list` is set, the other 4 configurations are ignored. Otherwise, `g:shufflefonts_fonts_list_all` and the one corresponding to your working operating system are concatenated and used.
+
 #### Sample 1:
+
 ```
 let g:shufflefonts_fonts_list = [
      \'Inconsolata',
      \'Consolas',
  \]
 ```
+
 #### Sample 2:
+
 ```
 let g:shufflefonts_fonts_list_all = [
     \'Inconsolata',
@@ -61,11 +69,13 @@ let g:shufflefonts_fonts_list_linux = [
     \'Ubuntu Mono',
 \]
 ```
+
 Note that font names vary a bit on different platforms: they use space to seperate words on \*nix but underline on Windows/Mac. But don’t worry about it because this is **shufflefonts**’s concern.(may fail in some corner cases)
 
 
 ### Shuffle Switch
 Auto changing can be disabled by:
+
 ```
 let g:shufflefonts_on_switch = 0
 ```
