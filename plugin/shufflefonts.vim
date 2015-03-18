@@ -1,5 +1,9 @@
 " Plugin for shuffling fonts.
 
+if !has("gui_running")
+    finish
+endif
+
 if v:version >= 700
     try
         silent echo fontsize#regex_gtk2

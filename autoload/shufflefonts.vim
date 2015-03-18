@@ -1,5 +1,7 @@
 " Autoload portion of plugin/shufflefonts.vim.
-
+if !has("gui_running")
+    finish
+endif
 if exists("autoloaded_shufflefonts")
     finish
 endif
@@ -16,10 +18,10 @@ let autoloaded_shufflefonts = 1
 " - suffix (possibly including extra fonts after commas)
 
 " gui_gtk2: Courier\ New\ 11
-let fontsize#regex_gtk2 = '\(.\{-}\)\( \)\(\d\+\)\(.*\)'
+let fontsize#regex_gtk2 = '\(.\{-}\)\( \)\(\d\+\)\(\)'
 
 " gui_photon: Courier\ New:s11
-let fontsize#regex_photon = '\(.\{-}\)\(:s\)\(\d\+\)\(.*\)'
+let fontsize#regex_photon = '\(.\{-}\)\(:s\)\(\d\+\)\(\)'
 
 " gui_kde: Courier\ New/11/-1/5/50/0/0/0/1/0
 let fontsize#regex_kde = '\(.\{-}\)\(\/\)\(\d\+\)\(.*\)'
@@ -60,6 +62,7 @@ function! shufflefonts#echofont()
 endfunction
 
 function! shufflefonts#shuffle()
+    let g:tmpfonts = s:fontsList
     if !len(s:fontsList)
         return
     endif
@@ -73,14 +76,14 @@ function! shufflefonts#shuffle()
         let newFont = decodedFont
     endif
     let &guifont = fontsize#setSize(newFont, fontSize)
+    call shufflefonts#display()
     let &updatetime = 1
     autocmd shufflefonts CursorHold * call shufflefonts#echofont()
 endfunction
 
 function! shufflefonts#display()
     redraw
-    sleep 100m
-    echo fontsize#fontString(getfontname()) . "<leader>"
+    echo fontsize#fontString(getfontname()) . " (<leader>)"
 endfunction
 
 function! shufflefonts#begin()
@@ -92,8 +95,40 @@ function! shufflefonts#quit()
 endfunction
 
 function! shufflefonts#init()
-    if exists('g:shufflefonts_fonts_list')
-        let s:fontsList = g:shufflefonts_fonts_list
+    if exists('g:shufflefonts_fonts')
+        let s:fontsList = g:shufflefonts_fonts
+    else
+        let s:fontsList = []
+        let s:fontsList_all = []
+        if exists('g:shufflefonts_fonts_list_all')
+            let s:fontsList_all = g:shufflefonts_fonts_list_all
+        endif
+        if has("gui_gtk2") || has("gui_photon") || has("gui_kde")
+            let s:fontsList_linux = []
+            if exists('g:shufflefonts_fonts_list_linux')
+                let s:fontsList_linux = g:shufflefonts_fonts_list_linux
+            endif
+            call map(s:fontsList_all, "function('substitute')(v:val, '_', '\ ', 'g')")
+            call map(s:fontsList_linux, "function('substitute')(v:val, '_', '\ ', 'g')")
+            let s:fontsList += s:fontsList_all + s:fontsList_linux
+        else
+            call map(s:fontsList_all, "function('substitute')(v:val, '\ ', '_', 'g')")
+            if has("mac")
+                let s:fontsList_mac = []
+                if exists('g:shufflefonts_fonts_list_mac')
+                    let s:fontsList_mac = g:shufflefonts_fonts_list_mac
+                endif
+                call map(s:fontsList_mac, "function('substitute')(v:val, '\ ', '_', 'g')")
+                let s:fontsList = s:fontsList_all + s:fontsList_mac
+            else
+                let s:fontsList_windows = []
+                if exists('g:shufflefonts_fonts_list_windows')
+                    let s:fontsList_windows = g:shufflefonts_fonts_list_windows
+                endif
+                call map(s:fontsList_windows, "function('substitute')(v:val, '\ ', '_', 'g')")
+                let s:fontsList = s:fontsList_all + s:fontsList_windows
+            endif
+        endif
     endif
     augroup shufflefonts
         au BufEnter * :call shufflefonts#shuffle()
