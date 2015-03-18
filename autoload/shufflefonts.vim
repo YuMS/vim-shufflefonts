@@ -62,18 +62,20 @@ function! shufflefonts#echofont()
 endfunction
 
 function! shufflefonts#shuffle()
-    let g:tmpfonts = s:fontsList
     if !len(s:fontsList)
         return
     endif
-    let fontSize = fontsize#getSize(getfontname())
     let index = s:random(len(s:fontsList))
-    let decodedFont = fontsize#decodeFont(getfontname())
-
-    if match(decodedFont, s:regex) != -1
-        let newFont = substitute(decodedFont, s:regex, s:fontsList[index] . '\2' . fontSize . '\4', '')
+    let fontSize = fontsize#getSize(getfontname())
+    if has('win32') || has('win64') || has('mac')
+        let newFont = s:fontsList[index]
     else
-        let newFont = decodedFont
+        let decodedFont = fontsize#decodeFont(getfontname())
+        if match(decodedFont, s:regex) != -1
+            let newFont = substitute(decodedFont, s:regex, s:fontsList[index] . '\2' . fontSize . '\4', '')
+        else
+            let newFont = decodedFont
+        endif
     endif
     let &guifont = fontsize#setSize(newFont, fontSize)
     call shufflefonts#display()
@@ -83,7 +85,7 @@ endfunction
 
 function! shufflefonts#display()
     redraw
-    echo fontsize#fontString(getfontname()) . " (<leader>)"
+    echo fontsize#fontString(getfontname())
 endfunction
 
 function! shufflefonts#begin()
